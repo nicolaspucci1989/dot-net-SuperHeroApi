@@ -64,7 +64,7 @@ namespace dot_net_SuperHeroApi.Controllers
         [HttpPut]
         public async Task<ActionResult<List<SuperHero>>> UpdateHero(SuperHero request)
         {
-            var hero = heroes.Find(x => x.Id == request.Id);
+            var hero = await _context.SuperHeroes.FindAsync(request.Id);
             if (hero == null)
                 return BadRequest("Hero not found.");
 
@@ -73,7 +73,9 @@ namespace dot_net_SuperHeroApi.Controllers
             hero.LastName= request.LastName;   
             hero.Place= request.Place;
 
-            return Ok(heroes);
+            await _context.SaveChangesAsync();
+
+            return Ok(await _context.SuperHeroes.ToListAsync());
         }
 
 
